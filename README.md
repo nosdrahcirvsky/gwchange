@@ -1,5 +1,9 @@
 # GWChange
 
+<p align="center">
+  <img src="docs/images/screenshot.png">
+</p>
+
 Just a simple batch script that I made in my spare time. Feel free to use it.
 
 ## Requirements
