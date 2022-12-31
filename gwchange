@@ -1,0 +1,51 @@
+#!/bin/bash
+
+cat logo.txt
+
+# Main colors
+BLUE='\033[0;34m'
+BOLD_BLUE='\033[1;34m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+WHITE='\033[0;97m'
+
+while getopts d:s: flag
+do
+    case "${flag}" in
+        d) directory=${OPTARG};;
+        s) sleep_time=${OPTARG};;
+    esac
+done
+
+echo -e "${BLUE}GNOME version: ${BOLD_BLUE}$(gnome-shell --version)"
+echo -e "${BLUE}Specified directory: ${BOLD_BLUE}$directory"
+echo -e "${BLUE}Sleep time: ${BOLD_BLUE}$sleep_time"
+echo ""
+
+# Get current path
+path=$directory
+
+# Append files (if any) to array
+myArray=($path"/"*)
+
+while :
+do
+	for str in ${myArray[@]}; do
+		# Get file extension
+		filename=$(basename -- "$str")
+		extension="${filename##*.}"
+	  	
+		# Check if the file is a valid image
+		if [ "$extension" != 'jpg' ] && [ "$extension" != 'jpeg' ] && [ "$extension" != 'png' ]; then
+			echo -e "${YELLOW}[$(date +%m-%d-%Y)] Unsupported file: ${WHITE}${extension}${YELLOW}. Ignoring..."
+    	 	continue
+  		fi
+
+		# Set this file as background
+		gsettings set org.gnome.desktop.background picture-uri 'file://'$str
+
+		# Sleep time (in seconds) before continuing
+		sleep $sleep_time"s"
+	done
+done
+
